@@ -1,14 +1,18 @@
 package modelo;
 
-import modelo.Livros;
-
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+
+import exceptions.OrderingException;
+
 import static java.util.Comparator.comparing;
 
 
@@ -28,23 +32,35 @@ public class OrdenadorDeLivros {
 		preencherMapaOrdenacoes();
 	}
 	
-	
 	public void ordenar() {
 		ordenacoes.get( concatenarConfiguracoes() ).run();
 	}
 	
     public void carregarConfiguracao(){
-        try {
-        	scan = new Scanner(new File(PATH_ARQ_CONFIG));
-        } catch (FileNotFoundException e) {
-        		//e.printStackTrace();
-        		System.out.println(
-        				"Arquivo de configuração não encontrado em: " + PATH_ARQ_CONFIG);
-        }        	
+    	try {
+    		BufferedReader br = new BufferedReader(new FileReader(PATH_ARQ_CONFIG));    
+    		if (br.readLine() == null) {
+    			br.close();
+				throw new OrderingException();				
+			}
+			br.close();
+			scan = new Scanner(new File(PATH_ARQ_CONFIG));
         	setTipoOrdenacaoAnoEdicao(scan.nextInt());
         	setTipoOrdenacaoAutor(scan.nextInt());
-        	setTipoOrdenacaoTitulo(scan.nextInt());	
+        	setTipoOrdenacaoTitulo(scan.nextInt());
+        	
+		} catch (FileNotFoundException e) {
+			System.out.println(
+    				"Arquivo de configuração não encontrado em: " + PATH_ARQ_CONFIG);
+		} catch (OrderingException e) {
+			//System.out.println("OrderingException");
+			e.printStackTrace();
+		} catch (IOException e) {
+        	e.printStackTrace();        		
+        }        	
+	
     }
+
 
 	
     public String concatenarConfiguracoes() {
@@ -69,7 +85,7 @@ public class OrdenadorDeLivros {
 		// Códigos possíveis para os tipos de ordenação.
 		// Ano Edicao -  Autor - Titulo
 		// 0 = Sem Filtro, 1 = Ascendente, 2 = Descendente
-		ordenacoes.put("000", () -> System.out.println("Sem Ordenação"));
+		ordenacoes.put("000", () -> System.out.println(""));
 		ordenacoes.put("001", () -> this.listaLivros.sort((o1, o2)->o1.getTitulo().compareTo(o2.getTitulo())));
 		ordenacoes.put("002", () -> this.listaLivros.sort(Comparator.comparing(Livros::getTitulo).reversed()));
 		ordenacoes.put("010", () -> this.listaLivros.sort((o1, o2)->o1.getAutor().compareTo(o2.getAutor())));
@@ -97,6 +113,7 @@ public class OrdenadorDeLivros {
 		ordenacoes.put("221", () -> this.listaLivros.sort(Comparator.comparing(Livros::getAnoEdicao).reversed().thenComparing(comparing(Livros::getAutor).reversed()).thenComparing(Livros::getTitulo)));
 		ordenacoes.put("222", () -> this.listaLivros.sort(Comparator.comparing(Livros::getAnoEdicao).reversed().thenComparing(comparing(Livros::getAutor).reversed()).thenComparing(comparing(Livros::getTitulo).reversed())));
 	}
+	
 	
 
 	public void setListaLivros(List<Livros> listaLivros) {

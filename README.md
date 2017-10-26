@@ -4,10 +4,10 @@ Designed to be a solution for ordering book lists.
 
 ## Getting Started
 
-This project was developed exclusively using JAVA 8.
-To make use of it, clone/download this repository
-Then configurate the file sis.config inside the config folder accordingly to the desired sorting method.
-Execute the Main class and the list inside it will be sorted.
+This project was developed exclusively using JAVA 8. \n
+To make use of it, clone/download this repository \n
+Then configurate the file sis.config inside the config folder accordingly to the desired sorting method. \n
+Execute the Main class and the list inside it will be sorted. \n
 
 
 ### Prerequisites
