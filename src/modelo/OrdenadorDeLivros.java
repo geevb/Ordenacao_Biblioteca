@@ -28,7 +28,6 @@ public class OrdenadorDeLivros {
 	
 	
 	public OrdenadorDeLivros() {
-		carregarConfiguracao();
 		preencherMapaOrdenacoes();
 	}
 	
