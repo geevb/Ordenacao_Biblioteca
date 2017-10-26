@@ -18,7 +18,7 @@ public class Main {
 		
 		ord.setListaLivros(list);
 		ord.ordenar();
-		ord.printarListaOrdenada();		
+		ord.printarListaOrdenada();
 		
 	}
 

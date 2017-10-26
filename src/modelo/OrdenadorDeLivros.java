@@ -36,32 +36,43 @@ public class OrdenadorDeLivros {
 		ordenacoes.get( concatenarConfiguracoes() ).run();
 	}
 	
-    public void carregarConfiguracao(){
-    	try {
-    		BufferedReader br = new BufferedReader(new FileReader(PATH_ARQ_CONFIG));    
-    		if (br.readLine() == null) {
-    			br.close();
-				throw new OrderingException();				
+    public void carregarConfiguracao() {
+    	if(!arquivoEstaVazio()) {
+			try {
+				scan = new Scanner(new File(PATH_ARQ_CONFIG));
+			} catch (FileNotFoundException e) {
+	    		System.out.println(
+	    				"Arquivo de configuração não encontrado em: " + PATH_ARQ_CONFIG);
+	    		System.exit(1);
 			}
-			br.close();
-			scan = new Scanner(new File(PATH_ARQ_CONFIG));
+			
         	setTipoOrdenacaoAnoEdicao(scan.nextInt());
         	setTipoOrdenacaoAutor(scan.nextInt());
         	setTipoOrdenacaoTitulo(scan.nextInt());
         	
-		} catch (FileNotFoundException e) {
-			System.out.println(
-    				"Arquivo de configuração não encontrado em: " + PATH_ARQ_CONFIG);
-		} catch (OrderingException e) {
-			//System.out.println("OrderingException");
-			e.printStackTrace();
-		} catch (IOException e) {
-        	e.printStackTrace();        		
-        }        	
-	
+    	} else { System.exit(1); }
     }
 
-
+    public boolean arquivoEstaVazio() {
+    	try {
+    		BufferedReader br;
+			br = new BufferedReader(new FileReader(PATH_ARQ_CONFIG)); 
+    		if (br.readLine() == null) {
+    			br.close();
+    			throw new OrderingException();				
+    		}
+    		br.close();
+		}	   	
+    	  catch (OrderingException e) {
+			e.printStackTrace();
+			return true;
+    	} catch (IOException e) {
+    		System.out.println(
+    				"Arquivo de configuração não encontrado em: " + PATH_ARQ_CONFIG);
+    		return true;
+    	}
+    	return false;
+    }
 	
     public String concatenarConfiguracoes() {
     	return Integer.toString(getTipoOrdenacaoAnoEdicao()) +
